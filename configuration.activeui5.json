@@ -4,5 +4,163 @@
   "username": "admin",
   "password": "admin",
   "numberOfCopies": 10,
-  "dashboard": {}
+  "dashboard": {
+    "name": "template",
+    "pages": {
+      "p-0": {
+        "content": {
+          "0": {
+            "mapping": {
+              "rows": ["[Currency].[Currency].[Currency]"],
+              "columns": ["ALL_MEASURES"],
+              "measures": ["[Measures].[pnl.FOREX]"]
+            },
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY Hierarchize(Descendants({[Currency].[Currency].[AllMember]}, 1, SELF_AND_BEFORE)) ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "widgetKey": "pivot-table",
+            "serverKey": "Ranch 5.10",
+            "name": "FOREX / Currency"
+          },
+          "1": {
+            "mapping": {
+              "rows": ["[CounterParty].[CounterParty].[CounterParty]"],
+              "columns": ["ALL_MEASURES"],
+              "measures": ["[Measures].[pnl.FOREX]"]
+            },
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY Order(Hierarchize(Descendants({[CounterParty].[CounterParty].[AllMember]}, 2, SELF_AND_BEFORE)), [Measures].[pnl.FOREX], ASC) ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "widgetKey": "table",
+            "serverKey": "Ranch 5.10",
+            "name": "FOREX / Counterparty"
+          },
+          "2": {
+            "mapping": {
+              "values": ["[Measures].[contributors.COUNT]"],
+              "sliceBy": ["[Geography].[City].[City]"],
+              "horizontalSubplots": [],
+              "verticalSubplots": ["[Booking].[Desk].[LegalEntity]"]
+            },
+            "widgetKey": "plotly-pie-chart",
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY Hierarchize(Descendants({[Geography].[City].[AllMember]}, 1, SELF_AND_BEFORE)) ON ROWS, NON EMPTY Crossjoin(Hierarchize(Descendants({[Booking].[Desk].[AllMember]}, 1, SELF_AND_BEFORE)), {[Measures].[contributors.COUNT]}) ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "serverKey": "Ranch 5.10",
+            "name": "Number of trades / City"
+          },
+          "3": {
+            "widgetKey": "quick-filter",
+            "mode": "checkbox",
+            "levelCoordinates": {
+              "dimensionName": "Booking",
+              "hierarchyName": "Desk",
+              "levelName": "LegalEntity"
+            },
+            "serverKey": "Ranch 5.10",
+            "name": "Filter page on desk"
+          },
+          "4": {
+            "mapping": {
+              "rows": [],
+              "columns": ["ALL_MEASURES"],
+              "measures": ["[Measures].[pnl.FOREX]"]
+            },
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "widgetKey": "kpi",
+            "serverKey": "Ranch 5.10",
+            "comparison": {
+              "dimensionName": "Time",
+              "hierarchyName": "HistoricalDates",
+              "referenceMemberNamePath": ["2021-05-13"],
+              "comparedMemberNamePath": ["2021-05-14"]
+            },
+            "name": "FOREX trend"
+          },
+          "5": {
+            "mapping": {
+              "xValues": ["[Measures].[delta.SUM]"],
+              "yValues": ["[Measures].[pnl.FOREX]"],
+              "size": [],
+              "color": ["[Geography].[City].[City]"],
+              "splitBy": ["[Trades].[Trades].[TradeId]"],
+              "horizontalSubplots": [],
+              "verticalSubplots": []
+            },
+            "widgetKey": "plotly-scatter-plot",
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY {[Measures].[delta.SUM], [Measures].[pnl.FOREX]} ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Descendants({[Geography].[City].[AllMember]}, 1, SELF_AND_BEFORE)), Hierarchize(Descendants({[Trades].[Trades].[AllMember]}, 1, SELF_AND_BEFORE))) ON ROWS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "serverKey": "Ranch 5.10",
+            "filters": [
+              "{[Geography].[City].[AllMember].[London], [Geography].[City].[AllMember].[Paris], [Geography].[City].[AllMember].[New York]}"
+            ],
+            "name": "delta / FOREX correlation"
+          },
+          "6": {
+            "mapping": {
+              "xAxis": ["[Time].[HistoricalDates].[AsOfDate]"],
+              "values": ["[Measures].[pnl.FOREX]"],
+              "splitBy": ["ALL_MEASURES"],
+              "horizontalSubplots": [],
+              "verticalSubplots": []
+            },
+            "widgetKey": "plotly-line-chart",
+            "query": {
+              "updateMode": "once",
+              "mdx": "SELECT NON EMPTY [Time].[HistoricalDates].[AsOfDate].Members ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
+            },
+            "serverKey": "Ranch 5.10",
+            "name": "FOREX evolution"
+          }
+        },
+        "layout": {
+          "children": [
+            {
+              "children": [
+                {
+                  "children": [
+                    { "leafKey": "0", "size": 0.5 },
+                    { "leafKey": "2", "size": 0.25 },
+                    {
+                      "children": [
+                        { "leafKey": "3", "size": 0.5 },
+                        { "leafKey": "4", "size": 0.5 }
+                      ],
+                      "direction": "column",
+                      "size": 0.25
+                    }
+                  ],
+                  "direction": "row",
+                  "size": 0.5
+                },
+                {
+                  "children": [
+                    { "leafKey": "1", "size": 0.5 },
+                    { "leafKey": "5", "size": 0.25 },
+                    { "leafKey": "6", "size": 0.25 }
+                  ],
+                  "direction": "row",
+                  "size": 0.5
+                }
+              ],
+              "direction": "column",
+              "size": 1
+            }
+          ],
+          "direction": "row"
+        },
+        "name": "Page 1"
+      }
+    },
+    "pagesOrder": ["p-0"],
+    "filters": []
+  }
 }
