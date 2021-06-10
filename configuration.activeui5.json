@@ -1,0 +1,8 @@
+{
+  "contentServerUrl": "https://activepivot-ranch.activeviam.com:5900/content",
+  "activeUIVersion": "5",
+  "username": "admin",
+  "password": "admin",
+  "numberOfCopies": 10,
+  "dashboard": {}
+}

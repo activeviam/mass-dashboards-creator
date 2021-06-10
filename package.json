@@ -1,0 +1,27 @@
+{
+  "name": "mass-dashboards-creator",
+  "version": "1.0.0",
+  "description": "NodeJS script allowing to create and upload many dashboards at once to a Content Server, for scaling tests.",
+  "main": "upload.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/activeviam/mass-dashboards-creator.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/activeviam/mass-dashboards-creator/issues"
+  },
+  "homepage": "https://github.com/activeviam/mass-dashboards-creator#readme",
+  "dependencies": {
+    "base-64": "^1.0.0",
+    "fs-extra": "^10.0.0",
+    "node-fetch": "^2.6.1"
+  },
+  "devDependencies": {
+    "prettier": "^2.3.1"
+  }
+}
