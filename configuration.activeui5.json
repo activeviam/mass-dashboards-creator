@@ -1,9 +1,10 @@
 {
-  "contentServerUrl": "https://activepivot-ranch.activeviam.com:5900/content",
+  "contentServerUrl": "http://localhost:8080/pivot/content",
   "activeUIVersion": "5",
   "username": "admin",
   "password": "admin",
-  "numberOfCopies": 10,
+  "numberOfCopies": 2000,
+  "numberOfFolders": 50,
   "dashboard": {
     "name": "template",
     "pages": {

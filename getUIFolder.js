@@ -5,6 +5,7 @@ const getUIFolder = ({
   activeUIVersion,
   dashboard,
   numberOfCopies,
+  numberOfFolders,
   username,
 }) => {
   if (!["4", "5"].includes(activeUIVersion)) {
@@ -12,6 +13,14 @@ const getUIFolder = ({
       `Invalid ActiveUI version "${activeUIVersion}". Supported versions are ["4", "5"].`
     );
   }
+
+  if (numberOfCopies % numberOfFolders !== 0) {
+    throw new Error(
+      `Invalid number of copies (${numberOfCopies}). It must be a multiple of the number of folders (${numberOfFolders}).`
+    );
+  }
+
+  const numberOfCopiesPerFolder = numberOfCopies / numberOfFolders;
 
   const entry = {
     owners: [username],
@@ -23,10 +32,13 @@ const getUIFolder = ({
   };
 
   const setOfIds = new Set();
-  while (setOfIds.size < numberOfCopies) {
+  while (setOfIds.size < numberOfCopies + numberOfFolders) {
     setOfIds.add(Math.random().toString(36).slice(-3));
   }
   const ids = Array.from(setOfIds);
+
+  const folderIds = ids.slice(0, numberOfFolders);
+  const dashboardIds = ids.slice(numberOfFolders);
 
   const uiFolder = {
     entry: {
@@ -37,52 +49,86 @@ const getUIFolder = ({
   };
 
   if (activeUIVersion === "4") {
-    const stringifiedDashboard = JSON.stringify(dashboard, undefined, 2);
-
     // ActiveUI 4 stores everything (dashboards, widgets, filters) under /bookmarks.
     uiFolder.children.bookmarks = {
       entry: {
         ...entry,
         isDirectory: true,
       },
-      children: ids.reduce(
-        (acc, id) => ({
-          ...acc,
-          [id]: {
-            entry: {
-              ...entry,
-              content: stringifiedDashboard,
-            },
-          },
-        }),
-        {}
-      ),
+      children: {},
     };
 
-    // ActiveUI 4 only stores ids under /structure (and not the names of the dashboards).
-    // This unfortunately implies having to fetch every single dashboard entirely in order to display their tree.
-    uiFolder.children.structure = {
+    uiFolder.children.bookmarks.children.content = {
       entry: {
         ...entry,
         isDirectory: true,
       },
-      children: ids.reduce(
-        (acc, id) => ({
+      children: {
+        ...dashboardIds.reduce(
+        (acc, dashboardId, dashboardIndex) => ({
           ...acc,
-          [id]: {
+          [dashboardId]: {
             entry: {
               ...entry,
-              isDirectory: true,
+              content: JSON.stringify(
+                { ...dashboard, name: `${dashboard.name} ${dashboardIndex}` },
+                undefined,
+                2
+              ),
             },
           },
         }),
         {}
       ),
+      ...folderIds.reduce((acc, folderId, folderIndex) => ({
+        ...acc,
+        [folderId]: {
+          entry: {
+            ...entry,
+            content: JSON.stringify({name: `Folder ${folderIndex}`, type: "folder"}, undefined, 2)
+          }
+        }
+      }), {})
+      }
+    };
+
+    // ActiveUI 4 only stores ids under /structure (and not the names of the dashboards).
+    // This unfortunately implies having to fetch every single dashboard entirely in order to display their tree.
+    uiFolder.children.bookmarks.children.structure = {
+      entry: {
+        ...entry,
+        isDirectory: true,
+      },
+      children: folderIds.reduce((acc, folderId, folderIndex) => {
+        const idsOfDashboardsInFolder = dashboardIds.slice(
+          folderIndex * numberOfCopiesPerFolder,
+          (folderIndex + 1) * numberOfCopiesPerFolder
+        );
+        return {
+          ...acc,
+          [folderId]: {
+            entry: {
+              ...entry,
+              isDirectory: true,
+            },
+            children: idsOfDashboardsInFolder.reduce(
+              (innerAcc, dashboardId) => ({
+                ...innerAcc,
+                [dashboardId]: {
+                  entry: {
+                    ...entry,
+                    isDirectory: true,
+                  },
+                },
+              }), {}
+            ),
+          },
+        };
+      }, {}),
     };
   } else {
     const { name, ...rest } = dashboard;
     const stringifiedDashboard = JSON.stringify(rest, undefined, 2);
-    const stringifiedMetaData = JSON.stringify({ name }, undefined, 2);
 
     // ActiveUI 5 has dedicated folders for dashboards / widgets / filters.
     uiFolder.children.dashboards = {
@@ -98,7 +144,7 @@ const getUIFolder = ({
         ...entry,
         isDirectory: true,
       },
-      children: ids.reduce(
+      children: dashboardIds.reduce(
         (acc, id) => ({
           ...acc,
           [id]: {
@@ -119,26 +165,56 @@ const getUIFolder = ({
         ...entry,
         isDirectory: true,
       },
-      children: ids.reduce(
-        (acc, id) => ({
+      children: folderIds.reduce((acc, folderId, folderIndex) => {
+        const idsOfDashboardsInFolder = dashboardIds.slice(
+          folderIndex * numberOfCopiesPerFolder,
+          (folderIndex + 1) * numberOfCopiesPerFolder
+        );
+        return {
           ...acc,
-          [id]: {
+          [folderId]: {
             entry: {
               ...entry,
               isDirectory: true,
             },
             children: {
-              [`${id}_metadata`]: {
+              [`${folderId}_metadata`]: {
                 entry: {
                   ...entry,
-                  content: stringifiedMetaData,
+                  content: JSON.stringify(
+                    { name: `Folder ${folderIndex}`, isFolder: true },
+                    undefined,
+                    2
+                  ),
                 },
               },
+              ...idsOfDashboardsInFolder.reduce(
+                (innerAcc, dashboardId, dashboardIndex) => ({
+                  ...innerAcc,
+                  [dashboardId]: {
+                    entry: {
+                      ...entry,
+                      isDirectory: true,
+                    },
+                    children: {
+                      [`${dashboardId}_metadata`]: {
+                        entry: {
+                          ...entry,
+                          content: JSON.stringify(
+                            { name: `${name} ${dashboardIndex}` },
+                            undefined,
+                            2
+                          ),
+                        },
+                      },
+                    },
+                  },
+                }), {}
+              ),
             },
           },
-        }),
-        {}
-      ),
+        };
+      }, {}),
     };
   }
 

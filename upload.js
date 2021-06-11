@@ -17,6 +17,7 @@ const upload = async () => {
       contentServerUrl,
       dashboard,
       numberOfCopies,
+      numberOfFolders,
       password,
       username,
     } = await readJSON(configurationPath);
@@ -25,11 +26,12 @@ const upload = async () => {
       activeUIVersion,
       dashboard,
       numberOfCopies,
+      numberOfFolders,
       username,
     });
 
     const response = await fetch(
-      `${contentServerUrl}/rest/v5/files/ui?import=`,
+      `${contentServerUrl}/rest/v4/files/ui/?import=`,
       {
         method: "POST",
         body: JSON.stringify({
@@ -60,7 +62,7 @@ const upload = async () => {
       `Succesfully uploaded ${numberOfCopies} copies of the given dashboard to the Content Server.`
     );
   } catch (error) {
-    console.error(`ERROR. Upload failed.\n${error.message}`);
+    console.error(`ERROR. Upload failed.\n${error.stack}`);
     process.exit(1);
   }
 };

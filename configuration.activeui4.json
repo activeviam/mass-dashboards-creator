@@ -1,9 +1,10 @@
 {
-  "contentServerUrl": "https://activepivot-ranch.activeviam.com:5900/content",
+  "contentServerUrl": "http://localhost:8080/pivot/content",
   "activeUIVersion": "4",
   "username": "admin",
   "password": "admin",
-  "numberOfCopies": 2,
+  "numberOfCopies": 2000,
+  "numberOfFolders": 50,
   "dashboard": {
     "name": "template",
     "type": "container",
@@ -262,7 +263,7 @@
                             "[Trades].[Trades].[TradeId]"
                           ],
                           "values": [
-                            "[Measures].[delta.SUM__#__equity-derivatives]",
+                            "[Measures].[delta.SUM]",
                             "[Measures].[pnl.FOREX]"
                           ],
                           "splitBy": [],
@@ -273,7 +274,7 @@
                       },
                       "query": {
                         "serverUrl": "",
-                        "mdx": "SELECT NON EMPTY {[Measures].[delta.SUM__#__equity-derivatives], [Measures].[pnl.FOREX]} ON COLUMNS, NON EMPTY Crossjoin([Currency].[Currency].[Currency].Members, [Trades].[Trades].[TradeId].Members) ON ROWS FROM (SELECT {[Geography].[City].[ALL].[AllMember].[London], [Geography].[City].[ALL].[AllMember].[New York], [Geography].[City].[ALL].[AllMember].[Paris]} ON COLUMNS FROM [EquityDerivativesCube])",
+                        "mdx": "SELECT NON EMPTY {[Measures].[delta.SUM], [Measures].[pnl.FOREX]} ON COLUMNS, NON EMPTY Crossjoin([Currency].[Currency].[Currency].Members, [Trades].[Trades].[TradeId].Members) ON ROWS FROM (SELECT {[Geography].[City].[ALL].[AllMember].[London], [Geography].[City].[ALL].[AllMember].[New York], [Geography].[City].[ALL].[AllMember].[Paris]} ON COLUMNS FROM [EquityDerivativesCube])",
                         "contextValues": {},
                         "updateMode": "once"
                       }
