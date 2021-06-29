@@ -3,7 +3,7 @@
   "activeUIVersion": "5",
   "username": "admin",
   "password": "admin",
-  "numberOfCopies": 2000,
+  "numberOfCopies": 5000,
   "numberOfFolders": 50,
   "dashboard": {
     "name": "template",
@@ -21,7 +21,7 @@
               "mdx": "SELECT NON EMPTY Hierarchize(Descendants({[Currency].[Currency].[AllMember]}, 1, SELF_AND_BEFORE)) ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
             "widgetKey": "pivot-table",
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "name": "FOREX / Currency"
           },
           "1": {
@@ -35,7 +35,7 @@
               "mdx": "SELECT NON EMPTY Order(Hierarchize(Descendants({[CounterParty].[CounterParty].[AllMember]}, 2, SELF_AND_BEFORE)), [Measures].[pnl.FOREX], ASC) ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
             "widgetKey": "table",
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "name": "FOREX / Counterparty"
           },
           "2": {
@@ -50,7 +50,7 @@
               "updateMode": "once",
               "mdx": "SELECT NON EMPTY Hierarchize(Descendants({[Geography].[City].[AllMember]}, 1, SELF_AND_BEFORE)) ON ROWS, NON EMPTY Crossjoin(Hierarchize(Descendants({[Booking].[Desk].[AllMember]}, 1, SELF_AND_BEFORE)), {[Measures].[contributors.COUNT]}) ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "name": "Number of trades / City"
           },
           "3": {
@@ -61,7 +61,7 @@
               "hierarchyName": "Desk",
               "levelName": "LegalEntity"
             },
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "name": "Filter page on desk"
           },
           "4": {
@@ -75,7 +75,7 @@
               "mdx": "SELECT NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
             "widgetKey": "kpi",
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "comparison": {
               "dimensionName": "Time",
               "hierarchyName": "HistoricalDates",
@@ -99,7 +99,7 @@
               "updateMode": "once",
               "mdx": "SELECT NON EMPTY {[Measures].[delta.SUM], [Measures].[pnl.FOREX]} ON COLUMNS, NON EMPTY Crossjoin(Hierarchize(Descendants({[Geography].[City].[AllMember]}, 1, SELF_AND_BEFORE)), Hierarchize(Descendants({[Trades].[Trades].[AllMember]}, 1, SELF_AND_BEFORE))) ON ROWS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "filters": [
               "{[Geography].[City].[AllMember].[London], [Geography].[City].[AllMember].[Paris], [Geography].[City].[AllMember].[New York]}"
             ],
@@ -118,7 +118,7 @@
               "updateMode": "once",
               "mdx": "SELECT NON EMPTY [Time].[HistoricalDates].[AsOfDate].Members ON ROWS, NON EMPTY {[Measures].[pnl.FOREX]} ON COLUMNS FROM [EquityDerivativesCube] CELL PROPERTIES VALUE, FORMATTED_VALUE, BACK_COLOR, FORE_COLOR, FONT_FLAGS"
             },
-            "serverKey": "Ranch 5.10",
+            "serverKey": "Local server",
             "name": "FOREX evolution"
           }
         },

@@ -3,7 +3,7 @@
   "activeUIVersion": "4",
   "username": "admin",
   "password": "admin",
-  "numberOfCopies": 2000,
+  "numberOfCopies": 5000,
   "numberOfFolders": 50,
   "dashboard": {
     "name": "template",
@@ -43,9 +43,7 @@
                           "pinnedHeaderSelector": "member",
                           "sortingMode": "non-breaking",
                           "addButtonFilter": "numeric",
-                          "cellRenderers": [
-                            "tree-layout"
-                          ],
+                          "cellRenderers": ["tree-layout"],
                           "statisticsShown": true,
                           "columnsGroups": [
                             {
@@ -162,16 +160,10 @@
                       "configuration": {
                         "type": "plotly-pie-chart",
                         "mapping": {
-                          "values": [
-                            "[Measures].[contributors.COUNT]"
-                          ],
-                          "sliceBy": [
-                            "[Geography].[City].[City]"
-                          ],
+                          "values": ["[Measures].[contributors.COUNT]"],
+                          "sliceBy": ["[Geography].[City].[City]"],
                           "horizontalSubplots": [],
-                          "verticalSubplots": [
-                            "[Booking].[Desk].[LegalEntity]"
-                          ]
+                          "verticalSubplots": ["[Booking].[Desk].[LegalEntity]"]
                         },
                         "subplotModeEnabled": true
                       },
@@ -296,12 +288,8 @@
                       "configuration": {
                         "type": "plotly-line-chart",
                         "mapping": {
-                          "xAxis": [
-                            "[Time].[HistoricalDates].[AsOfDate]"
-                          ],
-                          "values": [
-                            "[Measures].[pnl.FOREX]"
-                          ],
+                          "xAxis": ["[Time].[HistoricalDates].[AsOfDate]"],
+                          "values": ["[Measures].[pnl.FOREX]"],
                           "splitBy": [],
                           "horizontalSubplots": [],
                           "verticalSubplots": []
